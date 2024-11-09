@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils';
 import React from 'react';
-import { TextInput, View, Text, TextInputProps } from 'react-native';
+import { TextInput, View, Text, TextInputProps, TouchableOpacity } from 'react-native';
+import Feather from '@expo/vector-icons/Feather';
 
 interface CustomTextInputProps extends TextInputProps {
     label?: string;
@@ -12,6 +13,7 @@ interface CustomTextInputProps extends TextInputProps {
     labelStyles?: string;
     errorMessage?: string;
     errorStyles?: string;
+    isPassword?: boolean;
 }
 
 const CustomTextInput: React.FC<CustomTextInputProps> = ({
@@ -24,20 +26,37 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
     labelStyles = '',
     errorMessage = '',
     errorStyles = '',
+    isPassword = false,
     ...props
 }) => {
+    const [isSecure, setIsSecure] = React.useState(isPassword);
+
     return (
         <View className={cn(`w-full ${containerStyles}`)}>
             {label && <Text className={cn(`text-gray-800 mb-1 ${labelStyles}`)}>{label}</Text>}
-            <TextInput
-                placeholder={placeholder}
-                value={value}
-                onChangeText={onChangeText}
-                className={cn(
-                    `border rounded-lg p-3 text-gray-900 ${inputStyles} placeholder:text-gray-400`
+            
+            <View className="relative w-full">
+                <TextInput
+                    placeholder={placeholder}
+                    value={value}
+                    onChangeText={onChangeText}
+                    secureTextEntry={isPassword && isSecure}
+                    className={cn(
+                        `border rounded-lg p-3 pr-10 text-gray-900 ${inputStyles} placeholder:text-gray-400`
+                    )}
+                    {...props}
+                />
+
+                {isPassword && (
+                    <TouchableOpacity
+                        onPress={() => setIsSecure(!isSecure)}
+                        className="absolute right-4 top-3"
+                    >
+                        <Feather name={isSecure ? 'eye-off' : 'eye'} size={20} color="gray" />
+                    </TouchableOpacity>
                 )}
-                {...props}
-            />
+            </View>
+
             {errorMessage ? (
                 <Text className={cn(`text-red-500 mt-1 ${errorStyles}`)}>{errorMessage}</Text>
             ) : null}

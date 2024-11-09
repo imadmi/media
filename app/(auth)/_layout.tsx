@@ -12,7 +12,12 @@ export default function RootLayout() {
                     headerShown: false,
                 }}
             />
-            {/* <Stack.Screen name="+not-found" /> */}
+            <Stack.Screen
+                name="SignUp"
+                options={{
+                    headerShown: false,
+                }}
+            />
         </Stack>
     );
 }
