@@ -7,8 +7,6 @@ import { SafeAreaView, View, Text, TouchableOpacity, KeyboardAvoidingView } from
 import SignInForm from './SignInForm';
 import { router } from 'expo-router';
 import GoogleOauth from './GoogleOauth';
-// android 59486777240-20smorgil86cqfmrljt0o58o2fo15j4q.apps.googleusercontent.com
-// ios 59486777240-vh0rlm82dp9bidlftlan6tb3976fuuv1.apps.googleusercontent.com
 
 export default function SignIn() {
 
