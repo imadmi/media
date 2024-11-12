@@ -1,10 +1,16 @@
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, set } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CustomTextInput from '@/components/Input';
 import { Button } from '@/components/Button';
-import { View } from 'react-native';
+import { Text, View } from 'react-native';
 import Checkbox from '@/components/Checkbox';
+import { client } from '@/lib/client';
+import { useState } from 'react';
+import axios from 'axios';
+import { setItem } from '@/lib/storage';
+import { useAuth } from '@/lib/auth';
+import { router } from 'expo-router';
 
 const formSchema = z
     .object({
@@ -36,10 +42,35 @@ const SignupForm = () => {
             checkBox: false,
         },
     });
+    const [loading, setLoading] = useState(false);
+    const [errorFromApi, setError] = useState<string | null>(null);
+    const { signIn } = useAuth();
 
-    const onSubmit = (data: FormData) => {
-        console.log('Form Data:', data);
-        // Implement sign-in logic here
+    const onSubmit = async (data: FormData) => {
+        try {
+            setLoading(true);
+            const response = await client.post('/auth/signup', {
+                fullName: data.fullName,
+                email: data.email,
+                password: data.password,
+            });
+            if (response.data.success) {
+                signIn({
+                    access: response.data.userWithAccessToken.token,
+                    refresh: 'refresh-token',
+                });
+                router.push('/tabs');
+                return;
+            }
+            setLoading(false);
+        } catch (error) {
+            setLoading(false);
+            if (axios.isAxiosError(error) && error.response) {
+                setError(error.response.data.message);
+            } else {
+                setError('An unexpected error occurred');
+            }
+        }
     };
 
     return (
@@ -114,12 +145,16 @@ const SignupForm = () => {
                 )}
             />
             <Button
+                loading={loading}
                 text="Sign up"
                 onPress={handleSubmit(onSubmit)}
                 className="bg-white text-white w-full flex-row justify-center 
                 items-center h-12 rounded-[9999px]"
                 fontStyling="text-lg font-semibold"
             />
+            <View>
+                {errorFromApi && <Text className="text-red-500 text-sm mt-2">{errorFromApi}</Text>}
+            </View>
         </View>
     );
 };

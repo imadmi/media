@@ -1,9 +1,8 @@
-import React from 'react'
+import React from 'react';
+import { Text } from 'react-native';
 
 function Settings() {
-  return (
-    <div>Settings</div>
-  )
+    return <Text>Settings</Text>;
 }
 
-export default Settings
+export default Settings;

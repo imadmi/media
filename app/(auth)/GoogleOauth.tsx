@@ -1,16 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/Button';
 import { Image } from 'expo-image';
 import * as Google from 'expo-auth-session/providers/google';
 import * as WebBrowser from 'expo-web-browser';
 import { getItem, setItem } from '@/lib/storage';
 import { router } from 'expo-router';
+import { useAuth } from '@/lib/auth';
+import { client } from '@/lib/client';
+import axios from 'axios';
+import { Text, View } from 'react-native';
 
 WebBrowser.maybeCompleteAuthSession();
 
 function GoogleOauth() {
-    const [userInfo, setUserInfo] = React.useState(null);
-
     const config = {
         androidClientId: process.env.EXPO_PUBLIC_ANDROID_CLIENT_ID,
         iosClientId: process.env.EXPO_PUBLIC_IOS_CLIENT_ID,
@@ -18,6 +20,39 @@ function GoogleOauth() {
     };
 
     const [request, response, promptAsync] = Google.useAuthRequest(config);
+
+    const [loading, setLoading] = useState(false);
+    const [errorFromApi, setError] = useState<string | null>(null);
+    const { signIn } = useAuth();
+
+    const signInAPI = async (userInfo: any) => {
+        try {
+            setLoading(true);
+            console.log('userInfo', userInfo);
+            const response = await client.post('/auth/oauth2', {
+                fullName: userInfo.name,
+                email: userInfo.email,
+                picture: userInfo.picture,
+            });
+            
+            if (response.data.success) {
+                signIn({
+                    access: response.data.userWithAccessToken.token,
+                    refresh: 'refresh-token',
+                });
+                router.push('/tabs');
+                return;
+            }
+            setLoading(false);
+        } catch (error) {
+            setLoading(false);
+            if (axios.isAxiosError(error) && error.response) {
+                setError(error.response.data.message);
+            } else {
+                setError('An unexpected error occurred');
+            }
+        }
+    };
 
     const getUserInfo = async (token: string) => {
         if (!token) return;
@@ -31,9 +66,7 @@ function GoogleOauth() {
                 email: user.email,
                 picture: user.picture,
             };
-            setItem('user', JSON.stringify(userInfo));
-            router.push('/tabs');
-            // setUserInfo(user);
+            signInAPI(userInfo);
         } catch (error) {
             console.error('Failed to fetch user data');
         }
@@ -55,25 +88,30 @@ function GoogleOauth() {
     }, [response]);
 
     return (
-        <Button
-            // loading={true}
-            text="Sign in with Google"
-            onPress={() => {
-                promptAsync();
-            }}
-            className="bg-white text-white w-full flex-row justify-center
+        <>
+            <Button
+                loading={loading}
+                text="Sign in with Google"
+                onPress={() => {
+                    promptAsync();
+                }}
+                className="bg-white text-white w-full flex-row justify-center
             items-center h-12 rounded-[9999px]"
-            fontStyling="text-md font-normal"
-            startIcon={
-                <Image
-                    source={require('../../assets/images/google-icon-logo.svg')}
-                    style={{
-                        height: 24,
-                        width: 24,
-                    }}
-                />
-            }
-        />
+                fontStyling="text-md font-normal"
+                startIcon={
+                    <Image
+                        source={require('../../assets/images/google-icon-logo.svg')}
+                        style={{
+                            height: 24,
+                            width: 24,
+                        }}
+                    />
+                }
+            />
+            <View>
+                {errorFromApi && <Text className="text-red-500 text-sm mb-2">{errorFromApi}</Text>}
+            </View>
+        </>
     );
 }
 

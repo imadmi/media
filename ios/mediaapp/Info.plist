@@ -27,7 +27,7 @@
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
-          <string>myapp</string>
+          <string>media-app</string>
           <string>com.anonymous.mediaapp</string>
         </array>
       </dict>

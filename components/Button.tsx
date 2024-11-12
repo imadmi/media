@@ -1,7 +1,6 @@
 import { cn } from '@/lib/utils';
 import React from 'react';
-import { Text, TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
-import '../global.css';
+import { Text, TouchableOpacity, TouchableOpacityProps, View, ActivityIndicator } from 'react-native';
 
 type ButtonProps = TouchableOpacityProps & {
     text: string;
@@ -9,6 +8,7 @@ type ButtonProps = TouchableOpacityProps & {
     onPress?: () => void;
     disabled?: boolean;
     fontStyling?: string;
+    loading?: boolean;
 };
 
 export const Button: React.FC<ButtonProps> = ({
@@ -17,19 +17,27 @@ export const Button: React.FC<ButtonProps> = ({
     startIcon,
     disabled = false,
     fontStyling,
+    loading = false,
     ...props
 }) => {
     return (
         <TouchableOpacity
             onPress={onPress}
-            disabled={disabled}
+            disabled={disabled || loading}  // Disable button if loading
             className={cn(
                 'rounded-lg flex flex-row items-center',
-                disabled ? 'opacity-50' : 'opacity-100'
+                disabled || loading ? 'opacity-50' : 'opacity-100'
             )}
             {...props}
         >
-            {startIcon && <View className={cn('mr-2')}>{startIcon}</View>}
+            {loading && (
+                <View className={cn('mr-2')}>
+                    <ActivityIndicator size="small" color="grey" />
+                </View>
+            )}
+            {startIcon && !loading && (
+                <View className={cn('mr-2')}>{startIcon}</View>
+            )}
             <Text className={cn('font-bold', fontStyling)}>{text}</Text>
         </TouchableOpacity>
     );

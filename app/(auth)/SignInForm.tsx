@@ -1,10 +1,14 @@
-
 import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CustomTextInput from '@/components/Input';
 import { Button } from '@/components/Button';
-import { View } from 'react-native';
+import { Text, View } from 'react-native';
+import { useState } from 'react';
+import { client } from '@/lib/client';
+import { useAuth } from '@/lib/auth';
+import axios from 'axios';
+import { router } from 'expo-router';
 
 const formSchema = z.object({
     email: z.string().email('Invalid email address'),
@@ -20,11 +24,40 @@ const SignInForm = () => {
         formState: { errors },
     } = useForm<FormData>({
         resolver: zodResolver(formSchema),
+        defaultValues: {
+            email: '',
+            password: '',
+        },
     });
 
-    const onSubmit = (data: FormData) => {
-        console.log('Form Data:', data);
-        // Implement sign-in logic here
+    const [loading, setLoading] = useState(false);
+    const [errorFromApi, setError] = useState<string | null>(null);
+    const { signIn } = useAuth();
+
+    const onSubmit = async (data: FormData) => {
+        try {
+            setLoading(true);
+            const response = await client.post('/auth/login', {
+                email: data.email,
+                password: data.password,
+            });
+            if (response.data) {
+                signIn({
+                    access: response.data.token,
+                    refresh: 'refresh-token',
+                });
+                router.push('/tabs');
+                return;
+            }
+            setLoading(false);
+        } catch (error) {
+            setLoading(false);
+            if (axios.isAxiosError(error) && error.response) {
+                setError(error.response.data.message);
+            } else {
+                setError('An unexpected error occurred');
+            }
+        }
     };
 
     return (
@@ -64,7 +97,12 @@ const SignInForm = () => {
                     />
                 )}
             />
+            <View>
+                {errorFromApi && <Text className="text-red-500 text-sm mb-2">{errorFromApi}</Text>}
+            </View>
+
             <Button
+                loading={loading}
                 text="Sign in"
                 onPress={handleSubmit(onSubmit)}
                 className="bg-white text-white w-full flex-row justify-center
