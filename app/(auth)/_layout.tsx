@@ -3,9 +3,9 @@ import 'react-native-reanimated';
 import '../../global.css';
 import { hydrateAuth } from '@/lib/auth';
 
+hydrateAuth();
 
 export default function RootLayout() {
-    hydrateAuth();
     return (
         <Stack>
             <Stack.Screen

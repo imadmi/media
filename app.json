@@ -2,13 +2,14 @@
     "expo": {
         "name": "media-app",
         "slug": "media-app",
-        "entryPoint": "./(auth)/index.tsx",
         "version": "1.0.0",
         "orientation": "portrait",
         "icon": "./assets/images/icon.png",
         "scheme": "media-app",
         "userInterfaceStyle": "automatic",
-        "newArchEnabled": true,
+        "expo": {
+            "newArchEnabled": true
+        },
         "splash": {
             "image": "./assets/images/splash.png",
             "resizeMode": "contain",
