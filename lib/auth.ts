@@ -25,13 +25,13 @@ export const getToken = () => getItem<TokenType>(TOKEN);
 export const removeToken = () => removeItem(TOKEN);
 export const setToken = (value: TokenType) => setItem<TokenType>(TOKEN, value);
 
-interface AuthState {
+type AuthState = {
     token: TokenType | null;
     status: 'idle' | 'signOut' | 'signIn';
     signIn: (data: TokenType) => void;
     signOut: () => void;
     hydrate: () => void;
-}
+};
 
 const _useAuth = create<AuthState>((set, get) => ({
     status: 'idle',
@@ -47,14 +47,14 @@ const _useAuth = create<AuthState>((set, get) => ({
     hydrate: () => {
         try {
             const userToken = getToken();
-            console.log("Hydrating token:", userToken);
+            console.log('Hydrating token:', userToken);
             if (userToken) {
                 get().signIn(userToken);
             } else {
                 get().signOut();
             }
         } catch (error) {
-            console.error("Failed to hydrate token:", error);
+            console.error('Failed to hydrate token:', error);
         }
     },
 }));

@@ -1,9 +1,12 @@
-import { getItem } from '@/lib/storage';
 import React from 'react';
-import { Text } from 'react-native';
+import { SafeAreaView } from 'react-native';
 
 function index() {
-    return <Text>{JSON.stringify(getItem('user'))}</Text>;
+    return (
+        <SafeAreaView className="bg-black flex-1">
+            
+        </SafeAreaView>
+    );
 }
 
 export default index;

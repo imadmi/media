@@ -3,7 +3,7 @@ import { TouchableOpacity, View, Text } from 'react-native';
 import Feather from '@expo/vector-icons/Feather';
 import { cn } from '@/lib/utils';
 
-interface CheckboxProps {
+type CheckboxProps = {
     checked?: boolean;
     onToggle?: (checked: boolean) => void;
     label?: string;
@@ -17,7 +17,7 @@ interface CheckboxProps {
     icon?: 'check' | 'check-circle' | 'square';
     errorMessage?: string;
     errorStyles?: string;
-}
+};
 
 const Checkbox: React.FC<CheckboxProps> = ({
     checked = false,
@@ -63,16 +63,16 @@ const Checkbox: React.FC<CheckboxProps> = ({
                         } justify-center items-center border border-white`
                     )}
                 >
-                    {isChecked && <Feather name={icon} size={checkboxSize * 0.7} color={iconColor} />}
+                    {isChecked && (
+                        <Feather name={icon} size={checkboxSize * 0.7} color={iconColor} />
+                    )}
                 </View>
                 {labelPosition === 'right' && label && (
                     <Text className={cn(`ml-2 text-gray-700`, labelStyles)}>{label}</Text>
                 )}
             </TouchableOpacity>
             {/* Render the error message if it exists */}
-            {errorMessage && (
-                <Text className={cn(`mt-1`, errorStyles)}>{errorMessage}</Text>
-            )}
+            {errorMessage && <Text className={cn(`mt-1`, errorStyles)}>{errorMessage}</Text>}
         </View>
     );
 };

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Image } from 'expo-image';
-import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView, View, Text, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import { router } from 'expo-router';
 import SignupForm from './SignupForm';
@@ -8,7 +7,6 @@ import SignupForm from './SignupForm';
 const SignUp = () => {
     return (
         <SafeAreaView className="bg-black flex-1">
-            <StatusBar style="light" backgroundColor="black" />
             <KeyboardAvoidingView
                 style={{ flex: 1 }}
                 behavior="padding"

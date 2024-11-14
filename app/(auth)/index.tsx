@@ -2,17 +2,15 @@ import * as React from 'react';
 import { Button } from '@/components/Button';
 import Separator from '@/components/Separator';
 import { Image } from 'expo-image';
-import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView, View, Text, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import SignInForm from './SignInForm';
-import { router } from 'expo-router';
+import { Redirect, router } from 'expo-router';
 import GoogleOauth from './GoogleOauth';
 
 export default function SignIn() {
-
+    return <Redirect href={'/tabs/Settings'} />;// remove this line
     return (
         <SafeAreaView className="bg-black flex-1">
-            <StatusBar style="light" backgroundColor="black" />
             <KeyboardAvoidingView
                 style={{ flex: 1 }}
                 behavior="padding"
