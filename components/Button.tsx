@@ -23,7 +23,7 @@ export const Button: React.FC<ButtonProps> = ({
     return (
         <TouchableOpacity
             onPress={onPress}
-            disabled={disabled || loading}  // Disable button if loading
+            disabled={disabled || loading}
             className={cn(
                 'rounded-lg flex flex-row items-center',
                 disabled || loading ? 'opacity-50' : 'opacity-100'

@@ -1,15 +1,16 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import { Image } from 'expo-image';
 import Avatar from '@/components/Avatar';
 import { StatusBar } from 'expo-status-bar';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
 export default function TabLayout() {
     return (
         <>
-            <StatusBar style="light"/>
+            <StatusBar style="light" />
             <Tabs
                 screenOptions={{
                     tabBarActiveTintColor: 'white',
@@ -51,7 +52,7 @@ export default function TabLayout() {
                     name="Settings"
                     options={{
                         tabBarIcon: ({ color }) => (
-                            <AntDesign name="setting" size={24} color={color} />
+                            <FontAwesome6 name="circle-user" size={24} color={color} />
                         ),
                         headerShown: false,
                     }}
