@@ -1,20 +1,8 @@
-import { create, StoreApi, UseBoundStore } from 'zustand';
+import { create } from 'zustand';
 import { getItem, removeItem, setItem } from './storage';
+import { createSelectors } from '@/store/create-selectors';
 
 const TOKEN = 'token';
-
-type WithSelectors<S> = S extends { getState: () => infer T }
-    ? S & { use: { [K in keyof T]: () => T[K] } }
-    : never;
-
-export const createSelectors = <S extends UseBoundStore<StoreApi<object>>>(_store: S) => {
-    const store = _store as WithSelectors<typeof _store>;
-    store.use = {};
-    for (const key of Object.keys(store.getState())) {
-        (store.use as any)[key] = () => store((state) => state[key as keyof typeof state]);
-    }
-    return store;
-};
 
 export type TokenType = {
     access: string;
@@ -47,7 +35,6 @@ const _useAuth = create<AuthState>((set, get) => ({
     hydrate: () => {
         try {
             const userToken = getToken();
-            console.log('Hydrating token:', userToken);
             if (userToken) {
                 get().signIn(userToken);
             } else {

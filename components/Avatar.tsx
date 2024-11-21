@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Image, View, Text } from 'react-native';
+import { View, Text } from 'react-native';
 import { cn } from '@/lib/utils';
+import { Image } from 'expo-image';
 
 type AvatarProps = {
     src?: string;
@@ -18,7 +19,7 @@ const Avatar: React.FC<AvatarProps> = ({ src, fallback = 'A', className = '' }) 
     return (
         <View
             className={cn(
-                'flex justify-center items-center border border-gray-600 rounded-full',
+                'flex justify-center items-center border border-gray-600 rounded-full w-full h-full',
                 className
             )}
         >
