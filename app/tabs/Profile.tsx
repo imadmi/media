@@ -10,7 +10,7 @@ import usescrollStore from '@/store/scrollStore';
 import Avatar from '@/components/Avatar';
 import { Button } from '@/components/Button';
 
-function Settings() {
+function Profile() {
     const scroll = usescrollStore((state) => state.scroll);
     const avatarSize = Math.max(50, 100 - scroll / 2);
     const translateY =
@@ -49,41 +49,56 @@ function Settings() {
                     style={{ position: translateY >= 0 ? 'absolute' : 'relative' }}
                     className=" bottom-0 w-full  px-2"
                 >
-                    <View className="flex-row justify-between h-12">
-                        <View
-                            className="border-2 border-black rounded-full overflow-hidden ml-3 mt-2"
-                            style={{
-                                width: avatarSize,
-                                height: avatarSize,
-                                alignSelf: 'center',
-                                transform: [{ translateY: translateY }],
-                            }}
-                        >
-                            <Avatar fallback="A" src="https://i.pravatar.cc" />
-                        </View>
-                        <View>
-                            <Button
-                                text="Edit Profile"
-                                onPress={() => {}}
-                                className=" text-white p-2 border-2 border-gray-400
-                            rounded-full mr-3 mt-2 px-4"
-                                fontStyling="text-white"
-                            />
-                        </View>
-                    </View>
-                    <ScrollView className="mt-3">
-                        <Text className="text-white font-bold text-xl">Imad Mimouni</Text>
-                        <Text className="text-white">@Imadmi</Text>
-                        <Text className="text-white mt-4">Joined october, 2011</Text>
-                        <Text className="text-white ">Born septembre 10, 2011</Text>
-                        <Text className="text-white mt-2">66 Following 11 Follwers</Text>
-                    </ScrollView>
+                    <ProfileSection avatarSize={avatarSize} translateY={translateY} /> 
                 </View>
             </View>
             <TopTabs />
         </View>
     );
 }
+
+const ProfileSection = ({
+    avatarSize,
+    translateY,
+}: {
+    avatarSize: number;
+    translateY: number;
+}) => (
+    <View
+        style={{ position: translateY >= 0 ? 'absolute' : 'relative' }}
+        className="bottom-0 w-full px-2"
+    >
+        <View className="flex-row justify-between h-12">
+            <View
+                className="border-2 border-black rounded-full overflow-hidden ml-3 mt-2"
+                style={{
+                    width: avatarSize,
+                    height: avatarSize,
+                    alignSelf: 'center',
+                    transform: [{ translateY }],
+                }}
+            >
+                <Avatar fallback="A" src="https://i.pravatar.cc" />
+            </View>
+            <View>
+                <Button
+                    text="Edit Profile"
+                    onPress={() => {}}
+                    className="text-white p-2 border-2 border-gray-400 rounded-full mr-3 mt-2 px-4"
+                    fontStyling="text-white"
+                />
+            </View>
+        </View>
+        <ScrollView className="mt-3">
+            <Text className="text-white font-bold text-xl">Imad Mimouni</Text>
+            <Text className="text-white">@Imadmi</Text>
+            <Text className="text-white mt-4">Joined October, 2011</Text>
+            <Text className="text-white">Born September 10, 2011</Text>
+            <Text className="text-white mt-2">66 Following • 11 Followers</Text>
+        </ScrollView>
+    </View>
+);
+
 
 const DynamicHeader = ({ scrollPosition }: { scrollPosition: number }) => {
     const maxHeaderHeight = 180 + Constants.statusBarHeight;
@@ -124,7 +139,7 @@ const DynamicHeader = ({ scrollPosition }: { scrollPosition: number }) => {
 export default function App() {
     return (
         <NavigationContainer>
-            <Settings />
+            <Profile />
         </NavigationContainer>
     );
 }

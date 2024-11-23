@@ -6,6 +6,8 @@
     "start": "expo start -c",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run:android",
+    "prebuild": "expo prebuild --clean",
+    "build:android": "eas build --profile=preview --platform android --local",
     "ios": "expo run:ios",
     "web": "expo start --web",
     "test": "jest --watchAll",
@@ -52,7 +54,8 @@
     "tailwindcss": "^3.4.14",
     "zod": "^3.23.8",
     "zustand": "^5.0.1",
-    "react-native-pager-view": "6.3.0"
+    "react-native-pager-view": "6.3.0",
+    "expo-dev-client": "~4.0.29"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

@@ -8,7 +8,7 @@ import { Redirect, router } from 'expo-router';
 import GoogleOauth from './GoogleOauth';
 
 export default function SignIn() {
-    return <Redirect href={'/tabs/Settings'} />;// remove this line
+    return <Redirect href={'/tabs/'} />; // remove this line
     return (
         <SafeAreaView className="bg-black flex-1">
             <KeyboardAvoidingView
