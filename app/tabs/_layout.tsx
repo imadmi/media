@@ -3,15 +3,18 @@ import { Tabs } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { AntDesign } from '@expo/vector-icons';
+import useHeaderStore from '@/store/showHeaderStore';
 
 export default function TabLayout() {
+    const showHeader = useHeaderStore((state) => state.showHeader);
+
     return (
         <>
             <StatusBar style="light" />
             <Tabs
                 screenOptions={{
                     tabBarActiveTintColor: 'white',
-                    tabBarStyle: { backgroundColor: 'black' },
+                    tabBarStyle: !showHeader ? { display: 'none' } : { backgroundColor: 'black' },
                     headerShown: false,
                 }}
             >

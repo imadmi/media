@@ -1,15 +1,12 @@
-import Constants from 'expo-constants';
 import React, { useRef, useState } from 'react';
-import { View, FlatList, RefreshControl, Modal, Text } from 'react-native';
+import { View, FlatList, RefreshControl, TouchableOpacity } from 'react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import useHeaderStore from '@/store/showHeaderStore';
 import Tweet from '@/utils/Tweet';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Image } from 'expo-image';
 import Avatar from '@/components/Avatar';
-import { set } from 'react-hook-form';
 import { MotiView } from 'moti';
-import { Button } from '@/components/Button';
 import AddPostModal from '@/utils/AddPostModal';
 
 export const posts = [
@@ -149,35 +146,35 @@ export type PostType = (typeof posts)[0];
 
 const AddPost = () => {
     const showHeader = useHeaderStore((state) => state.showHeader);
-    const [openModal, setopenModal] = useState(true);
+    const [openModal, setopenModal] = useState(false);
     return (
         <>
-            <MotiView
-                style={{
-                    overflow: 'hidden',
-                }}
-                from={{
-                    height: showHeader ? 0 : 60,
-                    width: showHeader ? 0 : 60,
-                    opacity: showHeader ? 0 : 1,
-                }}
-                animate={{
-                    height: showHeader ? 60 : 0,
-                    width: showHeader ? 60 : 0,
-                    opacity: showHeader ? 1 : 0,
-                }}
-                transition={{
-                    type: 'timing',
-                    duration: 300,
-                }}
-                className="absolute bg-blue-400 rounded-full bottom-4 right-4
+            <TouchableOpacity onPress={() => setopenModal(true)}>
+                <MotiView
+                    style={{
+                        overflow: 'hidden',
+                    }}
+                    from={{
+                        height: showHeader ? 0 : 60,
+                        width: showHeader ? 0 : 60,
+                        opacity: showHeader ? 0 : 1,
+                    }}
+                    animate={{
+                        height: showHeader ? 60 : 0,
+                        width: showHeader ? 60 : 0,
+                        opacity: showHeader ? 1 : 0,
+                    }}
+                    transition={{
+                        type: 'timing',
+                        duration: 300,
+                    }}
+                    className="absolute bg-blue-400 rounded-full bottom-4 right-4
             items-center justify-center z-10"
-            >
-                <AntDesign name="plus" size={24} color="white" onPress={() => setopenModal(true)} />
-            </MotiView>
-            {openModal && (
-                <AddPostModal openModal={openModal} setopenModal={setopenModal} />
-            )}
+                >
+                    <AntDesign name="plus" size={24} color="white" />
+                </MotiView>
+            </TouchableOpacity>
+            {openModal && <AddPostModal openModal={openModal} setopenModal={setopenModal} />}
         </>
     );
 };

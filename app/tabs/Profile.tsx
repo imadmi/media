@@ -49,7 +49,7 @@ function Profile() {
                     style={{ position: translateY >= 0 ? 'absolute' : 'relative' }}
                     className=" bottom-0 w-full  px-2"
                 >
-                    <ProfileSection avatarSize={avatarSize} translateY={translateY} /> 
+                    <ProfileSection avatarSize={avatarSize} translateY={translateY} />
                 </View>
             </View>
             <TopTabs />
@@ -57,13 +57,7 @@ function Profile() {
     );
 }
 
-const ProfileSection = ({
-    avatarSize,
-    translateY,
-}: {
-    avatarSize: number;
-    translateY: number;
-}) => (
+const ProfileSection = ({ avatarSize, translateY }: { avatarSize: number; translateY: number }) => (
     <View
         style={{ position: translateY >= 0 ? 'absolute' : 'relative' }}
         className="bottom-0 w-full px-2"
@@ -98,7 +92,6 @@ const ProfileSection = ({
         </ScrollView>
     </View>
 );
-
 
 const DynamicHeader = ({ scrollPosition }: { scrollPosition: number }) => {
     const maxHeaderHeight = 180 + Constants.statusBarHeight;
@@ -137,9 +130,5 @@ const DynamicHeader = ({ scrollPosition }: { scrollPosition: number }) => {
 };
 
 export default function App() {
-    return (
-        <NavigationContainer>
-            <Profile />
-        </NavigationContainer>
-    );
+    return <Profile />;
 }
