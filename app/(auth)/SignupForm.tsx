@@ -11,6 +11,7 @@ import axios from 'axios';
 import { setItem } from '@/lib/storage';
 import { useAuth } from '@/lib/auth';
 import { router } from 'expo-router';
+import { setUser } from '@/lib/user';
 
 const formSchema = z
     .object({
@@ -59,6 +60,7 @@ const SignupForm = () => {
                     access: response.data.userWithAccessToken.token,
                     refresh: 'refresh-token',
                 });
+                setUser(response.data.userWithAccessToken);
                 router.push('/tabs');
                 return;
             }

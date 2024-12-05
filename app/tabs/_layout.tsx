@@ -14,7 +14,10 @@ export default function TabLayout() {
             <Tabs
                 screenOptions={{
                     tabBarActiveTintColor: 'white',
-                    tabBarStyle: !showHeader ? { display: 'none' } : { backgroundColor: 'black' },
+                    tabBarStyle: {
+                        backgroundColor: 'black',
+                        display: showHeader ? 'flex' : 'none',
+                    },
                     headerShown: false,
                 }}
             >

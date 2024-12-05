@@ -3,12 +3,12 @@ import { Button } from '@/components/Button';
 import { Image } from 'expo-image';
 import * as Google from 'expo-auth-session/providers/google';
 import * as WebBrowser from 'expo-web-browser';
-import { getItem, setItem } from '@/lib/storage';
 import { router } from 'expo-router';
 import { useAuth } from '@/lib/auth';
 import { client } from '@/lib/client';
 import axios from 'axios';
 import { Text, View } from 'react-native';
+import { setUser } from '@/lib/user';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -40,6 +40,7 @@ function GoogleOauth() {
                     access: response.data.userWithAccessToken.token,
                     refresh: 'refresh-token',
                 });
+                setUser(response.data.userWithAccessToken);
                 router.push('/tabs');
                 return;
             }

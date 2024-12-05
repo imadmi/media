@@ -1,13 +1,12 @@
 import Constants from 'expo-constants';
 import React, { FC, useEffect, useRef, useState } from 'react';
-import { View, Modal, TextInput, KeyboardAvoidingView, Text } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, Modal, TextInput, KeyboardAvoidingView, Text, SafeAreaView } from 'react-native';
 import { Button } from '@/components/Button';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Avatar from '@/components/Avatar';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { client } from '@/lib/client';
-import { set } from 'react-hook-form';
+import { PostPosts } from '@/lib/Api_calls/Api_calls';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 type AddPostModalProps = {
     openModal: boolean;
@@ -16,8 +15,21 @@ type AddPostModalProps = {
 
 const AddPostModal: FC<AddPostModalProps> = ({ openModal, setopenModal }) => {
     const [content, setContent] = useState('');
-    const [loading, setloading] = useState(false);
     const inputRef = useRef<TextInput>(null);
+
+    const queryClient = useQueryClient();
+
+    const { mutate, isPending } = useMutation({
+        mutationFn: () => PostPosts({ content }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['posts'] });
+            setopenModal(false);
+            setContent('');
+        },
+        onError: (error) => {
+            console.error('Failed to post:', error);
+        },
+    });
 
     useEffect(() => {
         if (openModal && inputRef.current) {
@@ -25,22 +37,6 @@ const AddPostModal: FC<AddPostModalProps> = ({ openModal, setopenModal }) => {
         }
     }, [openModal]);
 
-    const handlePost = async () => {
-        try {
-            setloading(true);
-            if (!content) {
-                setloading(false);
-                return;
-            }
-            const res = await client.post('/posts', {
-                content: content,
-            });
-            setloading(false);
-        } catch (error) {
-            console.error('Failed to post:', error);
-            setloading(false);
-        }
-    };
     return (
         <Modal visible={openModal} animationType="slide" onRequestClose={() => setopenModal(false)}>
             <KeyboardAvoidingView behavior="padding" className="flex-1">
@@ -60,8 +56,8 @@ const AddPostModal: FC<AddPostModalProps> = ({ openModal, setopenModal }) => {
                         />
                         <Button
                             text="Post"
-                            onPress={handlePost}
-                            loading={loading}
+                            onPress={() => mutate()}
+                            loading={isPending}
                             fontStyling="text-white text-lg"
                             className="bg-blue-400 px-4 py-2 rounded-full w-auto"
                         />

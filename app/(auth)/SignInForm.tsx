@@ -9,6 +9,7 @@ import { client } from '@/lib/client';
 import { useAuth } from '@/lib/auth';
 import axios from 'axios';
 import { router } from 'expo-router';
+import { setUser } from '@/lib/user';
 
 const formSchema = z.object({
     email: z.string().email('Invalid email address'),
@@ -46,6 +47,7 @@ const SignInForm = () => {
                     access: response.data.token,
                     refresh: 'refresh-token',
                 });
+                setUser(response.data);
                 router.push('/tabs');
                 return;
             }

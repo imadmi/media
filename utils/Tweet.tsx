@@ -1,10 +1,49 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { EvilIcons } from '@expo/vector-icons';
-import { PostType } from '@/app/tabs';
 import Avatar from '@/components/Avatar';
+import { useDislikePost, useLikePost } from '@/lib/Api_calls/Api_calls';
+import AntDesign from '@expo/vector-icons/AntDesign';
+
+type PostType = {
+    id: number;
+    content: string;
+    media?: string | null;
+    createdAt: string;
+    author: {
+        picture: string;
+        fullName: string;
+        login: string;
+    };
+    likes: { id: number; userId: number }[];
+    comments: { id: number; userId: number }[];
+    reposts: { id: number; userId: number }[];
+};
 
 const Tweet = ({ post }: { post: PostType }) => {
+    const { mutate: likePOst, isPending: isloading } = useLikePost();
+    const { mutate: dislikePOst, isPending } = useDislikePost();
+
+    const isUserLiked = useMemo(() => {
+        // if (post.likes.find((like) => like.userId === user.Id)) {
+        if (post.likes.find((like) => like.userId === 1)) {
+            return true;
+        }
+        return false;
+    }, [post.likes]);
+
+    const handleLike = () => {
+        if (isloading || isPending) {
+            return;
+        }
+        // if (post.likes.find((like) => like.userId === user.Id)) {
+        if (post.likes.find((like) => like.userId === 1)) {
+            dislikePOst(post.id);
+            return;
+        }
+        likePOst(post.id);
+    };
+
     return (
         <View className={'p-4 mb-4 rounded-lg border-b border-gray-700'}>
             <View className={'flex-row items-center'}>
@@ -26,7 +65,22 @@ const Tweet = ({ post }: { post: PostType }) => {
                     </View>
                     <View className={'mt-4 flex-row items-center text-white justify-between'}>
                         <TouchableOpacity className="flex-row items-center">
-                            <EvilIcons name="heart" size={24} color="#e5e7eb" />
+                            {isUserLiked ? (
+                                <AntDesign
+                                    name="heart"
+                                    size={19}
+                                    color="#e5e7eb"
+                                    className="pr-1"
+                                    onPress={handleLike}
+                                />
+                            ) : (
+                                <EvilIcons
+                                    name="heart"
+                                    size={24}
+                                    color="#e5e7eb"
+                                    onPress={handleLike}
+                                />
+                            )}
                             <Text className={'ml-1 text-gray-200'}>{post.likes.length}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity className="flex-row items-center">

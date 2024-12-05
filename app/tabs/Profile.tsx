@@ -5,10 +5,10 @@ import { MotiView } from 'moti';
 import Constants from 'expo-constants';
 import { Image } from 'expo-image';
 import { BlurView } from 'expo-blur';
-import TopTabs from '../../utils/TopTabs';
 import usescrollStore from '@/store/scrollStore';
 import Avatar from '@/components/Avatar';
 import { Button } from '@/components/Button';
+import TopTabs from '@/utils/TopTabs';
 
 function Profile() {
     const scroll = usescrollStore((state) => state.scroll);
