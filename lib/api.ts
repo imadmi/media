@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { client } from '../client';
+import { client } from './client';
 
 export const fetchPosts = async () => {
     const { data } = await client.get('/posts');
@@ -51,4 +51,9 @@ export const useDislikePost = () => {
             console.error('Error liking the post:', error);
         },
     });
+};
+
+export const postComment = async (postId: number, content: string) => {
+    const { data } = await client.post(`/comments`, { postId, content });
+    return data;
 };

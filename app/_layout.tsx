@@ -24,7 +24,7 @@ export default function RootLayout() {
     },[]);
 
     useEffect(() => {
-        if (getToken() && loaded) {
+        if (getToken()?.access && loaded) {
             router.push('/tabs');
         }
     },[loaded]);

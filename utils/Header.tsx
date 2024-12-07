@@ -4,7 +4,7 @@ import useHeaderStore from '@/store/showHeaderStore';
 import { Image } from 'expo-image';
 import Avatar from '@/components/Avatar';
 import { MotiView } from 'moti';
-
+import { getUser } from '@/lib/user';
 
 export const Header = () => {
     const showHeader = useHeaderStore((state) => state.showHeader);
@@ -28,8 +28,8 @@ export const Header = () => {
             }}
             className="bg-black border-b border-gray-700 flex-row items-center justify-between px-4"
         >
-            <View className="flex-row items-center justify-center pl-2">
-                <Avatar src="https://i.pravatar.cc/100" className="h-8 w-8" fallback="I" />
+            <View className="flex-row items-center justify-center pl-1">
+                <Avatar src={getUser()?.picture} className="h-8 w-8" />
             </View>
             <View className="justify-center items-center h-12">
                 <Image

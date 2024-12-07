@@ -6,9 +6,9 @@ export const client = axios.create({
 
 client.interceptors.request.use(
     (config) => {
-        // const jwtToken = getToken();
-        const jwtToken =
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiSW1hZGltYWRAZ21haWwuY29tIiwiaWF0IjoxNzMyNzQyMDY4LCJleHAiOjE3MzUzMzQwNjh9.oG942aCfWrLK7BdSGlNH7ZxCFd0Qe-7oE3lTgWM_VT8';
+        const jwtToken = getToken()?.access;
+        // const jwtToken =
+        //     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiSW1hZGltYWRAZ21haWwuY29tIiwiaWF0IjoxNzMzNDMzMDQ2LCJleHAiOjE3MzYwMjUwNDZ9.C_A7hZfmgXhxi5rSW6lWWszb4hm5QrrOIKMellzqC-0';
         if (jwtToken) {
             config.headers['Authorization'] = `Bearer ${jwtToken}`;
         }

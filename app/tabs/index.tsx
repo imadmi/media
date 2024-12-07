@@ -3,7 +3,7 @@ import { FlatList, RefreshControl, SafeAreaView } from 'react-native';
 import useHeaderStore from '@/store/showHeaderStore';
 import Tweet from '@/utils/Tweet';
 import { useQuery } from '@tanstack/react-query';
-import { fetchPosts } from '@/lib/Api_calls/Api_calls';
+import { fetchPosts } from '@/lib/api';
 import { Header } from '@/utils/Header';
 import { AddPost } from '@/utils/AddPost';
 
