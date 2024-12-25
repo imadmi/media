@@ -1,15 +1,15 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { EvilIcons } from '@expo/vector-icons';
 import Avatar from '@/components/Avatar';
 import { useDislikePost, useLikePost } from '@/lib/api';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { getUser, removeUser } from '@/lib/user';
-import { removeToken } from '@/lib/auth';
+import { getUser } from '@/lib/user';
 import CommentModal from './commentModal';
 import clsx from 'clsx';
+import { router } from 'expo-router';
 
-type PostType = {
+export type PostType = {
     id: number;
     content: string;
     media?: string | null;
@@ -20,12 +20,18 @@ type PostType = {
         login: string;
     };
     likes: { id: number; userId: number }[];
-    comments: { id: number; authorId: number }[];
+    comments: {
+        id: number;
+        authorId: number;
+        createdAt: string;
+        content: string;
+        author: { fullName: string; login: string; picture: string };
+    }[];
     reposts: { id: number; userId: number }[];
 };
 
 const Tweet = ({ post }: { post: PostType }) => {
-    const [openModal, setopenModal] = useState(false);
+    const [openModal, setOpenModal] = useState(false);
     const { mutate: likePost, isPending: isLiking } = useLikePost();
     const { mutate: dislikePost, isPending: isDisliking } = useDislikePost();
 
@@ -36,7 +42,7 @@ const Tweet = ({ post }: { post: PostType }) => {
 
     const isUserCommented = useMemo(
         () => post.comments.some((comment) => comment.authorId === getUser()?.id),
-        [post.likes]
+        [post.comments]
     );
 
     const handleLike = () => {
@@ -53,7 +59,15 @@ const Tweet = ({ post }: { post: PostType }) => {
 
     return (
         <View className="p-4 mb-4 rounded-lg border-b border-gray-700">
-            <View className="flex-row items-center">
+            <TouchableOpacity
+                className="flex-row items-center"
+                onPress={() =>
+                    router.push({
+                        pathname: '/Post',
+                        params: { post: JSON.stringify({ ...post, isUserLiked, isUserCommented }) },
+                    })
+                }
+            >
                 <View className="w-12 h-12">
                     <Avatar src={post.author.picture} />
                 </View>
@@ -62,11 +76,22 @@ const Tweet = ({ post }: { post: PostType }) => {
                     <Text className="text-gray-200">@{post.author.login}</Text>
                     <Text className="text-gray-200">. {date}</Text>
                 </View>
-            </View>
+            </TouchableOpacity>
             <View className="flex-row">
                 <View className="w-12 h-12 mr-4" />
                 <View className="flex-1">
-                    <Text className="mt-4 text-white">{post.content}</Text>
+                    <TouchableOpacity
+                        onPress={() =>
+                            router.push({
+                                pathname: '/Post',
+                                params: {
+                                    post: JSON.stringify({ ...post, isUserLiked, isUserCommented }),
+                                },
+                            })
+                        }
+                    >
+                        <Text className="mt-4 text-white">{post.content}</Text>
+                    </TouchableOpacity>
                     <View className="mt-4 flex-row items-center justify-between">
                         <TouchableOpacity className="flex-row items-center">
                             <EvilIcons name="retweet" size={24} color="#e5e7eb" />
@@ -74,7 +99,7 @@ const Tweet = ({ post }: { post: PostType }) => {
                         </TouchableOpacity>
                         <TouchableOpacity
                             className="flex-row items-center"
-                            onPress={() => setopenModal(true)}
+                            onPress={() => setOpenModal(true)}
                         >
                             <EvilIcons
                                 name="comment"
@@ -96,11 +121,10 @@ const Tweet = ({ post }: { post: PostType }) => {
                             onPress={!isUserLiked ? handleLike : handleDislike}
                         >
                             {isUserLiked ? (
-                                <AntDesign name="heart" size={18} color="red" className="mr-1" />
+                                <AntDesign name="heart" size={18} color="red" />
                             ) : (
                                 <EvilIcons name="heart" size={24} color="#e5e7eb" />
                             )}
-
                             <Text
                                 className={clsx('ml-1', {
                                     'text-red-500 font-semibold': isUserLiked,
@@ -118,7 +142,7 @@ const Tweet = ({ post }: { post: PostType }) => {
             </View>
             <CommentModal
                 openModal={openModal}
-                setopenModal={setopenModal}
+                setOpenModal={setOpenModal}
                 login={'@' + post.author.login}
                 postId={post.id}
             />

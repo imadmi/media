@@ -12,12 +12,12 @@ import Separator from '@/components/Separator';
 
 type CommentModalProps = {
     openModal: boolean;
-    setopenModal: (open: boolean) => void;
+    setOpenModal: (open: boolean) => void;
     login: string;
     postId: number;
 };
 
-const CommentModal: FC<CommentModalProps> = ({ openModal, setopenModal, login, postId }) => {
+const CommentModal: FC<CommentModalProps> = ({ openModal, setOpenModal, login, postId }) => {
     const [content, setContent] = useState('');
     const inputRef = useRef<TextInput>(null);
 
@@ -27,7 +27,7 @@ const CommentModal: FC<CommentModalProps> = ({ openModal, setopenModal, login, p
         mutationFn: () => postComment(postId, content),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['posts'] });
-            setopenModal(false);
+            setOpenModal(false);
             setContent('');
         },
         onError: (error) => {
@@ -42,7 +42,7 @@ const CommentModal: FC<CommentModalProps> = ({ openModal, setopenModal, login, p
     }, [openModal]);
 
     return (
-        <Modal visible={openModal} animationType="slide" onRequestClose={() => setopenModal(false)}>
+        <Modal visible={openModal} animationType="slide" onRequestClose={() => setOpenModal(false)}>
             <KeyboardAvoidingView behavior="padding" className="flex-1">
                 <SafeAreaView
                     style={{
@@ -56,7 +56,7 @@ const CommentModal: FC<CommentModalProps> = ({ openModal, setopenModal, login, p
                             name="close"
                             size={24}
                             color="white"
-                            onPress={() => setopenModal(false)}
+                            onPress={() => setOpenModal(false)}
                         />
                         <Button
                             text="Reply"
